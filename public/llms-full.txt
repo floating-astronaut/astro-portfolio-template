@@ -1,0 +1,11 @@
+# Your Name — extended profile (llms-full)
+
+Replace this with a longer factual profile if you want LLMs to have more
+context. Keep everything accurate and checkable against your site.
+
+## Summary
+One paragraph on who you are and the work you do.
+
+## Contact
+- Email: hello@example.com
+- Site: https://example.com

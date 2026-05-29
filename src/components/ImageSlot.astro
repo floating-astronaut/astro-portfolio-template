@@ -1,0 +1,55 @@
+---
+// Placeholder for imagery not yet supplied. Renders a dashed frame with the
+// exact dimensions the designer / Canva export must hit, plus alt text hint.
+//
+// Usage:
+//   <ImageSlot w={1280} h={720} label="Shopify automation dashboard" alt="..." />
+//
+// When a real asset is ready, swap <ImageSlot /> for Astro's <Image />.
+
+interface Props {
+  w: number;
+  h: number;
+  label: string;
+  alt?: string;
+  class?: string;
+  ratio?: string; // e.g. "16/9" — overrides aspect-ratio computed from w/h.
+  rounded?: 'md' | 'lg' | 'xl' | '2xl';
+}
+
+const {
+  w,
+  h,
+  label,
+  alt = label,
+  class: className = '',
+  ratio,
+  rounded = 'lg',
+} = Astro.props;
+
+const aspect = ratio ?? `${w} / ${h}`;
+const radius = {
+  md: 'rounded-md',
+  lg: 'rounded-lg',
+  xl: 'rounded-xl',
+  '2xl': 'rounded-2xl',
+}[rounded];
+---
+
+<figure
+  class:list={[
+    'relative overflow-hidden border border-dashed border-border bg-surface/40 flex items-center justify-center',
+    radius,
+    className,
+  ]}
+  style={{ aspectRatio: aspect }}
+  data-image-slot
+  aria-label={`Image placeholder: ${label}`}
+>
+  <div class="absolute inset-0 [background-image:linear-gradient(rgb(var(--color-border)/0.35)_1px,transparent_1px),linear-gradient(90deg,rgb(var(--color-border)/0.35)_1px,transparent_1px)] [background-size:32px_32px]"></div>
+  <figcaption class="relative z-10 px-4 py-2 text-center font-mono text-xs text-muted">
+    <span class="block text-brand/80">IMAGE SLOT</span>
+    <span class="block mt-1 text-fg/80">{label}</span>
+    <span class="block mt-0.5 text-subtle">{w}×{h} · alt: "{alt}"</span>
+  </figcaption>
+</figure>

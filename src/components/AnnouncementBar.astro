@@ -1,0 +1,72 @@
+---
+import Icon from '~/components/Icon.astro';
+import { announcementBar } from '~/lib/site';
+
+if (!announcementBar.enabled) return null;
+
+const { message, ctaLabel, ctaHref, promoCode } = announcementBar;
+---
+
+<aside
+  id="announcement-bar"
+  class="relative z-40 border-b border-brand/20 bg-brand/10 text-fg backdrop-blur-sm"
+  role="region"
+  aria-label="Site announcement"
+>
+  <div class="container-app flex items-center justify-center gap-3 py-2 text-fluid-xs md:text-fluid-sm">
+    <span aria-hidden="true" class="text-brand"><Icon name="bolt" size={14} /></span>
+    <p class="text-center max-w-prose">
+      {message}
+      {promoCode && (
+        <>
+          {' '}Use code <span class="font-mono px-1.5 py-0.5 bg-brand/20 text-brand rounded border border-brand/30">{promoCode}</span> at checkout.
+        </>
+      )}
+    </p>
+    {ctaHref && (
+      <a
+        href={ctaHref}
+        data-cta={(ctaHref as string) === '#kit-cta' ? 'kit' : undefined}
+        class="hidden md:inline-flex items-center gap-1 text-brand hover:underline whitespace-nowrap font-medium"
+      >
+        {ctaLabel}
+      </a>
+    )}
+    <button
+      type="button"
+      class="ml-auto md:ml-2 text-subtle hover:text-fg shrink-0"
+      aria-label="Dismiss announcement"
+      data-announcement-dismiss
+    >
+      <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+        <path d="M3 3l8 8M11 3l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+      </svg>
+    </button>
+  </div>
+</aside>
+
+<script define:vars={{ promoCode }}>
+  // Lightweight dismissal — sessionStorage so the bar reappears next visit but
+  // not on every page nav within this session.
+  const KEY = 'glitch-announcement-dismissed';
+  const bar = document.getElementById('announcement-bar');
+  const dismissBtn = bar?.querySelector('[data-announcement-dismiss]');
+  if (bar && dismissBtn) {
+    if (sessionStorage.getItem(KEY) === '1') {
+      bar.style.display = 'none';
+    }
+    dismissBtn.addEventListener('click', () => {
+      bar.style.display = 'none';
+      sessionStorage.setItem(KEY, '1');
+    });
+  }
+
+  // Publish the active promo code so RazorpayCheckout (and any future
+  // checkout surface) can auto-apply it without the buyer typing anything.
+  // Only the literal code we ship in announcementBar.promoCode lands here —
+  // not arbitrary URL or DOM input — so it can be trusted on the server
+  // side (which then re-validates against its own allowlist anyway).
+  if (promoCode && typeof sessionStorage !== 'undefined') {
+    sessionStorage.setItem('glitch.promo', promoCode);
+  }
+</script>

@@ -1,0 +1,55 @@
+---
+import JsonLd from '~/components/JsonLd.astro';
+
+// Schema.org Claim — used to mark verifiable factual assertions on a
+// page. Almost no SaaS site does this. AI assistants are starting to
+// weight Claim/ClaimReview structured data heavily for fact extraction:
+// the markup explicitly says "this sentence is a verifiable claim, here
+// is its scope and source", which beats prose for citation accuracy.
+//
+// Each claim becomes its own JSON-LD block tied to the page via
+// `appearance` → the URL it's stated at. This is the structured-data
+// shape Google + Anthropic + Perplexity have all signaled they index
+// when surfacing AI answers.
+
+interface Claim {
+  /** The factual statement, written declaratively. */
+  text: string;
+  /** Optional URL backing the claim — a competitor pricing page, a spec
+   *  page, or any primary source. Strengthens the citation signal. */
+  citation?: string;
+  /** Short label for the citation. */
+  citationLabel?: string;
+}
+
+interface Props {
+  claims: Claim[];
+  /** Page URL the claims appear on — used in Claim.appearance. */
+  pageUrl: string;
+  /** Author display name (typically the page byline or org). */
+  author?: string;
+}
+
+const { claims, pageUrl, author = 'Glitch Executor Labs' } = Astro.props;
+
+const data = claims.map((c, i) => {
+  const claim: Record<string, unknown> = {
+    '@context': 'https://schema.org',
+    '@type': 'Claim',
+    '@id': `${pageUrl}#claim-${i + 1}`,
+    text: c.text,
+    appearance: pageUrl,
+    author: { '@type': 'Organization', name: author },
+  };
+  if (c.citation) {
+    claim.citation = {
+      '@type': 'CreativeWork',
+      url: c.citation,
+      name: c.citationLabel ?? c.citation,
+    };
+  }
+  return claim;
+});
+---
+
+<JsonLd data={data} />

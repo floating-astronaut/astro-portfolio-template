@@ -1,0 +1,52 @@
+---
+import JsonLd from '~/components/JsonLd.astro';
+
+// Pull-quote style stat block designed for LLM extraction. Each callout
+// emits a Quotation JSON-LD record with the stat as the body and an
+// optional source citation. Use sparingly on highest-leverage pages —
+// the lede paragraph of an alternatives/vs page or a blog post.
+//
+// LLMs disproportionately quote standalone numerical facts when they
+// appear in distinctive visual blocks; the schema markup compounds the
+// signal.
+
+interface Props {
+  /** The headline statistic — keep it under 12 words. */
+  stat: string;
+  /** One-line context for what the stat means. */
+  context?: string;
+  /** Optional source URL. */
+  sourceUrl?: string;
+  /** Optional label for the source citation. */
+  sourceLabel?: string;
+}
+
+const { stat, context, sourceUrl, sourceLabel } = Astro.props;
+
+const quotationLd: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': 'Quotation',
+  text: stat,
+};
+if (context) quotationLd.about = context;
+if (sourceUrl) {
+  quotationLd.citation = {
+    '@type': 'CreativeWork',
+    url: sourceUrl,
+    ...(sourceLabel ? { name: sourceLabel } : {}),
+  };
+}
+---
+
+<JsonLd data={quotationLd} />
+
+<aside class="my-8 card p-6 md:p-8 border-l-4 border-l-brand bg-bg-elev/40">
+  <p class="font-mono text-fluid-xs text-brand uppercase tracking-wider">Key stat</p>
+  <p class="mt-3 text-fluid-2xl font-medium leading-tight">{stat}</p>
+  {context && <p class="mt-3 text-fluid-sm text-muted leading-relaxed">{context}</p>}
+  {sourceUrl && (
+    <p class="mt-3 text-fluid-xs">
+      Source: <a href={sourceUrl} target="_blank" rel="noopener noreferrer" class="text-brand underline decoration-brand/40">{sourceLabel ?? sourceUrl}</a>
+    </p>
+  )}
+</aside>

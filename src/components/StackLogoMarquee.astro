@@ -1,0 +1,29 @@
+---
+const stackLogos = [
+  { name: 'Meta Ads', icon: '/icons/stack/meta.svg' },
+  { name: 'Google Ads', icon: '/icons/stack/googleads.svg' },
+  { name: 'TikTok', icon: '/icons/stack/tiktok.svg' },
+  { name: 'Shopify', icon: '/icons/stack/shopify.svg' },
+  { name: 'Python', icon: '/icons/stack/python.svg' },
+  { name: 'React', icon: '/icons/stack/react.svg' },
+  { name: 'FastAPI', icon: '/icons/stack/fastapi.svg' },
+  { name: 'PostgreSQL', icon: '/icons/stack/postgresql.svg' },
+  { name: 'Cloudflare', icon: '/icons/stack/cloudflare.svg' },
+  { name: 'Astro', icon: '/icons/stack/astro.svg' },
+  { name: 'Node.js', icon: '/icons/stack/nodedotjs.svg' },
+  { name: 'GitLab', icon: '/icons/stack/gitlab.svg' },
+];
+const marqueeItems = [...stackLogos, ...stackLogos];
+---
+<div class="stack-marquee card relative mt-4 w-full max-w-full overflow-hidden px-0 py-3 lg:mt-10" aria-label="Platforms and tools I work with">
+  <div class="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-surface to-transparent"></div>
+  <div class="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-surface to-transparent"></div>
+  <div class="stack-marquee-track flex w-max items-center gap-3 px-4">
+    {marqueeItems.map((item) => (
+      <div class="flex h-12 shrink-0 items-center gap-3 rounded-lg border border-border/70 bg-bg/70 px-4 text-fluid-sm text-muted">
+        <img src={item.icon} alt="" width="22" height="22" loading="lazy" decoding="async" class="h-5 w-5 invert" />
+        <span class="whitespace-nowrap font-medium text-fg">{item.name}</span>
+      </div>
+    ))}
+  </div>
+</div>

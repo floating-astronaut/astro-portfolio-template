@@ -1,0 +1,156 @@
+---
+// Turnstile-protected contact form. Posts JSON to /api/contact
+// (Cloudflare Pages Function). On success the form sets window.location to /thanks.
+
+const siteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '';
+---
+
+<form
+  id="contact-form"
+  class="card p-6 md:p-8 grid gap-4"
+  method="post"
+  action="/api/contact"
+  novalidate
+  data-turnstile-sitekey={siteKey}
+>
+  <div class="grid gap-1">
+    <label for="cf-name" class="text-fluid-sm font-medium">Name</label>
+    <input
+      id="cf-name"
+      name="name"
+      required
+      autocomplete="name"
+      class="bg-surface-2 border border-border rounded-md px-3 py-3 text-base focus-visible:border-brand"
+    />
+  </div>
+
+  <div class="grid gap-1">
+    <label for="cf-email" class="text-fluid-sm font-medium">Work email</label>
+    <input
+      id="cf-email"
+      type="email"
+      name="email"
+      required
+      autocomplete="email"
+      class="bg-surface-2 border border-border rounded-md px-3 py-3 text-base focus-visible:border-brand"
+    />
+  </div>
+
+  <div class="grid gap-1">
+    <label for="cf-company" class="text-fluid-sm font-medium">Company</label>
+    <input
+      id="cf-company"
+      name="company"
+      autocomplete="organization"
+      class="bg-surface-2 border border-border rounded-md px-3 py-3 text-base focus-visible:border-brand"
+    />
+  </div>
+
+  <div class="grid gap-1">
+    <label for="cf-message" class="text-fluid-sm font-medium">What are you trying to scale?</label>
+    <textarea
+      id="cf-message"
+      name="message"
+      rows="4"
+      required
+      class="bg-surface-2 border border-border rounded-md px-3 py-3 text-base focus-visible:border-brand resize-y"
+    ></textarea>
+  </div>
+
+  {/* Honeypot — bots fill this, humans never see it. */}
+  <input
+    type="text"
+    name="company_url"
+    tabindex="-1"
+    autocomplete="off"
+    class="sr-only"
+    aria-hidden="true"
+  />
+
+  {/* Turnstile target (invisible + managed). */}
+  <div
+    class="cf-turnstile min-h-[65px]"
+    data-sitekey={siteKey}
+    data-theme="dark"
+    data-size="flexible"
+    data-appearance="interaction-only"
+  ></div>
+
+  <div class="flex items-center justify-between gap-3 flex-wrap">
+    <p id="contact-status" class="text-fluid-xs text-muted" role="status" aria-live="polite"></p>
+    <button type="submit" class="btn btn-primary" id="contact-submit">
+      Send
+    </button>
+  </div>
+
+  <p class="text-fluid-xs text-subtle">
+    Protected by Cloudflare Turnstile. We do not share your data.
+  </p>
+</form>
+
+{siteKey && (
+  <script
+    src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+    async
+    defer
+    is:inline
+  ></script>
+)}
+
+<script>
+  const form = document.getElementById('contact-form') as HTMLFormElement | null;
+  const status = document.getElementById('contact-status');
+  const submit = document.getElementById('contact-submit') as HTMLButtonElement | null;
+
+  if (form && status && submit) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      submit.disabled = true;
+      status.textContent = 'Sending…';
+      status.style.color = '';
+
+      const fd = new FormData(form);
+      if (fd.get('company_url')) { // honeypot tripped
+        window.location.href = '/thanks';
+        return;
+      }
+
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          headers: { 'accept': 'application/json' },
+          body: fd,
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+        // Read event_id from the server response so client-side Meta
+        // Pixel and server-side Conversions API share the same ID and
+        // Meta can dedupe.
+        let eventId: string | undefined;
+        try {
+          const body = await res.clone().json() as { event_id?: string };
+          eventId = body.event_id;
+        } catch {
+          eventId = undefined;
+        }
+
+        // Track the conversion before navigating away so GTM/GA4/Meta
+        // have time to queue the event via sendBeacon.
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+          event: 'lead_submit',
+          form_name: 'contact',
+          form_location: window.location.pathname,
+          event_id: eventId,
+        });
+
+        window.location.href = '/thanks';
+      } catch (err) {
+        submit.disabled = false;
+        status.textContent = 'Could not send — please email us directly.';
+        status.style.color = 'rgb(var(--color-danger))';
+        console.error(err);
+      }
+    });
+  }
+</script>

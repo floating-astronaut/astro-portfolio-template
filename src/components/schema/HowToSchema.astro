@@ -1,0 +1,35 @@
+---
+import JsonLd from '~/components/JsonLd.astro';
+
+interface Step {
+  name: string;
+  text: string;
+  url?: string;
+}
+
+interface Props {
+  name: string;
+  description?: string;
+  totalTime?: string;
+  steps: Step[];
+}
+
+const { name, description, totalTime, steps } = Astro.props;
+
+const data: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name,
+  step: steps.map((s, i) => ({
+    '@type': 'HowToStep',
+    position: i + 1,
+    name: s.name,
+    text: s.text,
+    ...(s.url ? { url: s.url } : {}),
+  })),
+};
+if (description) data.description = description;
+if (totalTime) data.totalTime = totalTime;
+---
+
+<JsonLd data={data} />

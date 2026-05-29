@@ -1,0 +1,64 @@
+---
+import JsonLd from '~/components/JsonLd.astro';
+import { site } from '~/lib/site';
+
+interface Props {
+  name: string;
+  description: string;
+  sku: string;
+  /** Canonical product URL — path or absolute. */
+  url: string;
+  /** Image URL — path or absolute. Optional. */
+  image?: string;
+  /** Price in major units (e.g. 499 for $499.00). */
+  price: number;
+  priceCurrency: 'USD' | 'INR';
+  /** External buy URL (Stripe / Razorpay payment link). */
+  offerUrl: string;
+  /** Brand name. Defaults to site.name. */
+  brand?: string;
+  /** Optional category label, e.g. "AI Agent Boilerplate". */
+  category?: string;
+}
+
+const {
+  name,
+  description,
+  sku,
+  url,
+  image,
+  price,
+  priceCurrency,
+  offerUrl,
+  brand = site.name,
+  category,
+} = Astro.props;
+
+const absoluteUrl = url.startsWith('http') ? url : new URL(url, site.url).toString();
+const absoluteImage = image
+  ? (image.startsWith('http') ? image : new URL(image, site.url).toString())
+  : new URL(site.ogImage, site.url).toString();
+
+const data: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name,
+  description,
+  sku,
+  url: absoluteUrl,
+  image: absoluteImage,
+  brand: { '@type': 'Brand', name: brand },
+  offers: {
+    '@type': 'Offer',
+    url: offerUrl,
+    price: price.toFixed(2),
+    priceCurrency,
+    availability: 'https://schema.org/InStock',
+    priceValidUntil: '2027-12-31',
+    seller: { '@type': 'Organization', name: site.parent },
+  },
+};
+if (category) data.category = category;
+---
+
+<JsonLd data={data} />

@@ -1,0 +1,93 @@
+---
+import '~/styles/global.css';
+import { site } from '~/lib/site';
+import Nav from '~/components/Nav.astro';
+import Footer from '~/components/Footer.astro';
+import JsonLd from '~/components/JsonLd.astro';
+import Analytics from '~/components/Analytics.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  ogSlug?: string;
+  noindex?: boolean;
+  pageType?: 'WebPage' | 'Article' | 'ContactPage' | 'AboutPage';
+}
+
+const {
+  title,
+  description = site.description,
+  image,
+  ogSlug,
+  noindex = false,
+  pageType = 'WebPage',
+} = Astro.props;
+
+const fullTitle = title ? `${title} - ${site.name}` : `${site.name} - ${site.tagline}`;
+const canonical = new URL(Astro.url.pathname, site.url).toString();
+const ogImage = image
+  ? new URL(image, site.url).toString()
+  : new URL(site.ogImage, site.url).toString();
+
+const personLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: site.name,
+  url: site.url,
+  jobTitle: 'AI systems builder and founder-operator',
+  worksFor: { '@type': 'Organization', name: site.parent, url: site.url },
+  sameAs: [],  // populate from your social profiles if you want richer Person schema
+};
+
+const siteLd = { '@context': 'https://schema.org', '@type': 'WebSite', name: site.name, url: site.url };
+const pageLd = { '@context': 'https://schema.org', '@type': pageType, name: fullTitle, url: canonical, description, image: ogImage, inLanguage: site.locale };
+---
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#0a0a0f" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex,nofollow" />}
+    <link rel="icon" type="image/x-icon" href="/assets/brand/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/brand/favicon-32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <JsonLd data={[personLd, siteLd, pageLd]} />
+    <Analytics />
+    <slot name="head" />
+  </head>
+  <body class="bg-bg text-fg">
+    {/* GTM noscript fallback — mirrors the head bootstrap in Analytics.astro.
+        Container ID kept in sync with PUBLIC_GTM_CONTAINER_ID (defaults to
+        set PUBLIC_GTM_CONTAINER_ID in your env to enable GTM). */}
+    {(import.meta.env.PUBLIC_GTM_CONTAINER_ID ?? '') && (
+      <noscript>
+        <iframe
+          src={`https://www.googletagmanager.com/ns.html?id=${import.meta.env.PUBLIC_GTM_CONTAINER_ID ?? ''}`}
+          height="0" width="0"
+          style="display:none;visibility:hidden"
+        ></iframe>
+      </noscript>
+    )}
+    <div id="header-stack" class="fixed top-0 inset-x-0 z-50"><Nav /></div>
+    <main id="main" tabindex="-1" class="pt-[var(--nav-h)]"><slot /></main>
+    <Footer />
+  </body>
+</html>

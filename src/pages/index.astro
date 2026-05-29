@@ -1,0 +1,189 @@
+---
+import Base from '~/layouts/Base.astro';
+import StackLogoMarquee from '~/components/StackLogoMarquee.astro';
+import { site } from '~/lib/site';
+
+// ── Portfolio content ────────────────────────────────────────────────────
+// Everything below is placeholder data. Replace the arrays + copy with your
+// own. Section anchors (#proof / #experience / #approach / #contact) match
+// the nav in src/lib/site.ts — keep them in sync if you rename.
+
+const proof = [
+  { value: '10+', label: 'Years doing the work — replace with the headline number that frames your experience.' },
+  { value: '50+', label: 'Projects shipped, clients served, or whatever metric proves your range.' },
+  { value: '3', label: 'Disciplines you operate across — design, build, ship, etc.' },
+  { value: '∞', label: 'Curiosity. Swap this for a real, specific, checkable stat.' },
+];
+
+const experience = [
+  {
+    role: 'Your Most Recent Role',
+    org: 'Company / Client',
+    period: '2024 — Present',
+    place: 'City / Remote',
+    summary: 'One-paragraph summary of what you owned and the outcome you drove. Lead with impact, then mechanism.',
+    bullets: [
+      'A concrete, quantified accomplishment.',
+      'A second result that shows range or depth.',
+      'A third that hints at how you work, not just what you did.',
+    ],
+  },
+  {
+    role: 'A Previous Role',
+    org: 'Company / Client',
+    period: '2021 — 2024',
+    place: 'City',
+    summary: 'Keep each entry tight. The reader is skimming — make every line earn its place.',
+    bullets: [
+      'Result one.',
+      'Result two.',
+    ],
+  },
+  {
+    role: 'Where It Started',
+    org: 'Company / Project',
+    period: '2018 — 2021',
+    place: 'City',
+    summary: 'The origin story role. Shows the foundation the rest was built on.',
+    bullets: ['The thing you learned here that still shapes how you work.'],
+  },
+];
+
+const skills = [
+  'Skill one', 'Skill two', 'Skill three', 'Skill four', 'Skill five',
+  'Skill six', 'Skill seven', 'Skill eight', 'Skill nine', 'Skill ten',
+];
+
+const projects = [
+  { name: 'Project One', type: 'What it is', detail: 'A sentence on what you built and why it mattered. Link it out to a live demo or repo.', proof: 'Live · Open source', href: '#' },
+  { name: 'Project Two', type: 'What it is', detail: 'Another project. Show range — a different kind of problem than project one.', proof: 'Case study', href: '#' },
+  { name: 'Project Three', type: 'What it is', detail: 'A third. Three is plenty for a portfolio landing; depth beats breadth.', proof: 'Demo', href: '#' },
+];
+---
+<Base
+  pageType="AboutPage"
+  title={site.tagline}
+  description={site.description}
+>
+  <section class="relative overflow-hidden pt-8 pb-14 md:pt-12 md:pb-20">
+    <div aria-hidden="true" class="pointer-events-none absolute inset-0 -z-10">
+      <div class="absolute left-1/2 top-[-18rem] h-[48rem] w-[78rem] max-w-[115vw] -translate-x-1/2 rounded-full bg-[radial-gradient(circle_at_center,rgb(var(--color-brand)/0.18),transparent_62%)] blur-3xl"></div>
+      <div class="absolute right-[-10rem] top-40 h-[32rem] w-[32rem] rounded-full bg-[radial-gradient(circle_at_center,rgb(var(--color-electric)/0.14),transparent_62%)] blur-3xl"></div>
+    </div>
+    <div class="container-app grid gap-10 lg:grid-cols-12 lg:items-center">
+      <div class="min-w-0 lg:col-span-7 reveal">
+        <p class="font-mono text-fluid-xs uppercase tracking-wider text-brand">{site.tagline}</p>
+        <h1 class="mt-4 text-fluid-5xl font-bold leading-[0.92] tracking-tighter md:text-fluid-6xl">Your<br /><span class="gradient-text">Name</span></h1>
+        <p class="mt-7 max-w-[60ch] text-fluid-lg text-muted">A two-sentence pitch. Who you are, what you do, and the kind of work you want more of. Make it specific enough that the right reader feels you are talking to them.</p>
+        <p class="mt-4 max-w-[60ch] text-fluid-base text-muted">A second line for the proof or the edge — the combination of things only you bring. Replace this copy in <code>src/pages/index.astro</code>.</p>
+        <div class="mt-9 flex flex-wrap items-center gap-4">
+          <a href="#contact" class="btn btn-primary px-6 py-3.5 text-fluid-base">Get in touch</a>
+          <a href="#experience" class="btn btn-ghost text-fluid-base">See the work</a>
+        </div>
+        <p class="mt-4 text-fluid-xs text-subtle">City, Country — your disciplines, comma-separated, for SEO + scanning.</p>
+      </div>
+      <div class="order-3 min-w-0 lg:order-none lg:col-span-5 reveal lg:self-center">
+        <div class="card relative overflow-hidden p-3">
+          <div class="aspect-video w-full rounded-lg bg-[linear-gradient(135deg,rgb(var(--color-brand)/0.18),rgb(var(--color-electric)/0.12))] grid place-items-center">
+            <span class="font-mono text-fluid-xs text-subtle">your hero image / headshot</span>
+          </div>
+          <div class="grid gap-3 p-4">
+            <div class="flex items-center justify-between border-b border-border/60 pb-3 font-mono text-fluid-xs text-muted"><span>portfolio-snapshot</span><span class="text-brand">available for work</span></div>
+            <div class="grid gap-2 text-fluid-sm text-muted">
+              <span>A one-line summary of where you have been.</span>
+              <span class="text-brand">And one line on what you are building next.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="order-2 min-w-0 lg:order-none lg:col-span-12">
+        <StackLogoMarquee />
+      </div>
+    </div>
+  </section>
+
+  <section id="proof" class="border-y border-border/60 bg-surface/35 py-6">
+    <div class="container-app grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {proof.map((item) => (
+        <div class="min-h-[126px] border-l border-border/60 py-2 pl-4">
+          <p class="text-fluid-4xl font-bold tracking-tight text-brand">{item.value}</p>
+          <p class="mt-2 text-fluid-sm text-muted">{item.label}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section id="experience" class="border-y border-border/60 bg-surface/35 py-16 md:py-24">
+    <div class="container-app">
+      <div class="max-w-3xl">
+        <h2>The path.</h2>
+        <p class="mt-4 text-fluid-lg text-muted">A line introducing your trajectory — the through-line that connects these roles.</p>
+      </div>
+      <div class="mt-10 grid gap-4">
+        {experience.map((item, idx) => (
+          <article class="card grid gap-5 p-5 md:grid-cols-[0.12fr_0.28fr_1fr] md:p-6">
+            <div class="font-mono text-fluid-sm text-brand">{String(idx + 1).padStart(2, '0')}</div>
+            <div>
+              <h3 class="text-fluid-2xl">{item.role}</h3>
+              <p class="mt-1 text-fluid-base text-fg">{item.org}</p>
+              <p class="mt-2 font-mono text-fluid-xs uppercase tracking-wider text-subtle">{item.period}</p>
+              <p class="mt-1 text-fluid-sm text-subtle">{item.place}</p>
+            </div>
+            <div>
+              <p class="text-fluid-base text-muted">{item.summary}</p>
+              <ul class="mt-4 grid gap-2 text-fluid-sm text-muted">
+                {item.bullets.map((bullet) => <li class="border-l border-brand/40 pl-3">{bullet}</li>)}
+              </ul>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section id="skills" class="py-16 md:py-20">
+    <div class="container-app grid gap-8 lg:grid-cols-12 lg:items-start">
+      <div class="lg:col-span-4"><h2>What I plug into.</h2><p class="mt-4 text-fluid-lg text-muted">A line framing your stack — the tools and disciplines you are fluent in.</p></div>
+      <div class="flex flex-wrap gap-3 lg:col-span-8">
+        {skills.map((skill) => <span class="rounded-full border border-border bg-bg/60 px-4 py-2 text-fluid-sm text-muted">{skill}</span>)}
+      </div>
+    </div>
+  </section>
+
+  <section id="approach" class="border-y border-border/60 bg-surface/35 py-16 md:py-24">
+    <div class="container-app">
+      <div class="max-w-3xl">
+        <h2>Selected work.</h2>
+        <p class="mt-4 text-fluid-lg text-muted">A line on how to read these — what you want the reader to take away.</p>
+      </div>
+      <div class="mt-10 grid gap-4">
+        {projects.map((p, idx) => (
+          <a href={p.href} class="card grid gap-5 p-5 transition-transform hover:-translate-y-0.5 md:grid-cols-[0.12fr_0.28fr_1fr_0.18fr] md:items-center md:p-6">
+            <div class="font-mono text-fluid-sm text-brand">0{idx + 1}</div>
+            <div><h3 class="text-fluid-2xl">{p.name}</h3><p class="mt-1 text-fluid-sm text-subtle">{p.type}</p></div>
+            <p class="text-fluid-base text-muted">{p.detail}</p>
+            <p class="font-mono text-fluid-xs uppercase tracking-wider text-subtle md:text-right">{p.proof}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="py-16 md:py-24">
+    <div class="container-app">
+      <div class="card relative overflow-hidden p-6 md:p-10">
+        <div aria-hidden="true" class="absolute right-[-8rem] top-[-8rem] h-[24rem] w-[24rem] rounded-full bg-[radial-gradient(circle_at_center,rgb(var(--color-brand)/0.16),transparent_62%)] blur-3xl"></div>
+        <div class="relative grid gap-8 md:grid-cols-[1fr_auto] md:items-center">
+          <div>
+            <h2>Let's talk.</h2>
+            <p class="mt-4 max-w-2xl text-fluid-lg text-muted">A line inviting the reader to reach out — what kind of work or conversation you want.</p>
+          </div>
+          <div class="flex flex-col gap-3 sm:flex-row md:flex-col">
+            <a href={`mailto:${site.contactEmail}`} class="btn btn-primary justify-center px-6 py-3.5">Email me</a>
+            {site.linkedin && <a href={site.linkedin} target="_blank" rel="noreferrer" class="btn btn-ghost justify-center px-6 py-3.5">LinkedIn</a>}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

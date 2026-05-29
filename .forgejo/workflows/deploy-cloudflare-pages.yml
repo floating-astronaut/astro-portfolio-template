@@ -1,0 +1,114 @@
+# Deploy to Cloudflare Pages on every push to main.
+#
+# Replaces the Cloudflare Pages "GitHub source" integration that broke
+# when the GitHub account got suspended. Cloudflare Pages doesn't have
+# a native Codeberg source connector, so we run the build inside a
+# Codeberg / Forgejo Actions runner and use Wrangler's Direct Upload
+# mode (`wrangler pages deploy`) to push the built dist/ to the same
+# project at the edge.
+#
+# Architecture
+# ────────────
+#   Codeberg push (main)
+#     └── Forgejo Actions runner pulls this workflow
+#         ├── pnpm install (frozen lockfile)
+#         ├── pnpm build  (astro build → ./dist)
+#         └── wrangler pages deploy ./dist --project-name=glitch-grow-site
+#             └── Cloudflare Pages serves new revision globally
+#
+# Required Codeberg secrets (Repo → Settings → Actions → Secrets)
+# ────────────────────────────────────────────────────────────────
+#   CLOUDFLARE_API_TOKEN     Token with these scopes (create at
+#                            dash.cloudflare.com/profile/api-tokens):
+#                              • Account → Cloudflare Pages: Edit
+#                              • User → User Details: Read
+#                            Do NOT use the Global API Key.
+#   CLOUDFLARE_ACCOUNT_ID    From the right rail of any Cloudflare
+#                            dashboard page.
+#
+# After this workflow runs once successfully, the legacy GitHub source
+# can be disconnected from the Cloudflare Pages project (Settings →
+# Builds & deployments → Disconnect). The Pages project itself stays;
+# we only swap the *source* of new revisions.
+
+name: Deploy Cloudflare Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Cancel an in-flight deploy if a newer push lands while this one is
+# still building. Last commit wins.
+concurrency:
+  group: cf-pages-deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: docker
+    container:
+      image: node:20-bookworm
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # Wrangler stamps the deploy with the commit SHA — give it
+          # the full history so the message is useful in the dashboard.
+          fetch-depth: 1
+
+      - name: Enable pnpm via corepack
+        run: |
+          corepack enable
+          # Pin pnpm to the 10.x line — pnpm 11+ requires Node 22's
+          # node:sqlite built-in, but this workflow runs on node:20-bookworm.
+          # Bump together when we move the container to node:22.
+          corepack prepare pnpm@10.15.0 --activate
+          pnpm --version
+
+      - name: Cache pnpm store
+        uses: actions/cache@v4
+        with:
+          path: ~/.local/share/pnpm/store
+          key: pnpm-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: pnpm-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Type-check
+        run: pnpm check
+        # Astro check finishes in ~10s and catches the kind of TS
+        # drift that broke prior deploys before fixing in CF Pages.
+        continue-on-error: false
+
+      - name: Build site
+        run: pnpm build
+        env:
+          # Pass through the public env vars Astro inlines at build
+          # time. Set these at the Codeberg repo Variables level
+          # (Settings → Actions → Variables) so they're visible to
+          # this job — they are NOT secrets (they ship to every
+          # browser already via the deployed bundle).
+          PUBLIC_GTM_CONTAINER_ID:    ${{ vars.PUBLIC_GTM_CONTAINER_ID }}
+          PUBLIC_GA_MEASUREMENT_ID:   ${{ vars.PUBLIC_GA_MEASUREMENT_ID }}
+          PUBLIC_META_PIXEL_ID:       ${{ vars.PUBLIC_META_PIXEL_ID }}
+          PUBLIC_TIKTOK_PIXEL_ID:     ${{ vars.PUBLIC_TIKTOK_PIXEL_ID }}
+          PUBLIC_TURNSTILE_SITE_KEY:  ${{ vars.PUBLIC_TURNSTILE_SITE_KEY }}
+
+      - name: Deploy to Cloudflare Pages
+        env:
+          CLOUDFLARE_API_TOKEN:  ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          # --branch=main produces the production deploy. Other
+          # branches publish as preview deployments at <branch>.
+          # <project>.pages.dev — same behaviour as the GitHub source
+          # integration we're replacing.
+          npx --yes wrangler@4 pages deploy ./dist \
+            --project-name=glitch-grow-site \
+            --branch="${GITHUB_REF_NAME:-main}" \
+            --commit-hash="${GITHUB_SHA:-unknown}" \
+            --commit-message="$(git log -1 --pretty=%s)" \
+            --commit-dirty=true

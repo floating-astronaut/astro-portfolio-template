@@ -1,0 +1,61 @@
+---
+import JsonLd from '~/components/JsonLd.astro';
+import { site } from '~/lib/site';
+
+interface Props {
+  name: string;
+  description: string;
+  url: string;
+  image?: string;
+  price: number;
+  priceCurrency: 'USD' | 'INR';
+  offerUrl: string;
+  /** e.g. "BusinessApplication", "DeveloperApplication" */
+  applicationCategory?: string;
+  /** Feature bullets surfaced to LLMs. */
+  featureList?: string[];
+  /** Operating system / runtime requirement. */
+  operatingSystem?: string;
+}
+
+const {
+  name,
+  description,
+  url,
+  image,
+  price,
+  priceCurrency,
+  offerUrl,
+  applicationCategory = 'BusinessApplication',
+  featureList,
+  operatingSystem = 'Linux, macOS, Windows (self-deployed)',
+} = Astro.props;
+
+const absoluteUrl = url.startsWith('http') ? url : new URL(url, site.url).toString();
+const absoluteImage = image
+  ? (image.startsWith('http') ? image : new URL(image, site.url).toString())
+  : new URL(site.ogImage, site.url).toString();
+
+const data: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name,
+  description,
+  url: absoluteUrl,
+  image: absoluteImage,
+  applicationCategory,
+  operatingSystem,
+  offers: {
+    '@type': 'Offer',
+    url: offerUrl,
+    price: price.toFixed(2),
+    priceCurrency,
+    availability: 'https://schema.org/InStock',
+    priceValidUntil: '2027-12-31',
+  },
+  publisher: { '@type': 'Organization', name: site.parent },
+};
+if (featureList && featureList.length) data.featureList = featureList;
+---
+
+<JsonLd data={data} />

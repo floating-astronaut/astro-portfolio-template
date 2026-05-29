@@ -1,0 +1,61 @@
+/* Design tokens. Colors declared as space-separated RGB triplets so Tailwind
+   can compose alpha via `<alpha-value>`. A future light theme can override
+   these under `[data-theme="light"]` without touching Tailwind config. */
+
+:root {
+  /* ---- Color (RGB channels) ---- */
+  --color-bg:         10 10 15;      /* #0a0a0f */
+  --color-surface:    18 18 26;      /* #12121a */
+  --color-surface-2:  24 24 34;      /* #181822 */
+  --color-border:     30 30 46;      /* #1e1e2e */
+  --color-fg:         245 247 250;
+  --color-muted:      203 213 225;   /* slate-300 — WCAG AA on #0a0a0f bg (12:1) */
+  --color-subtle:     156 163 175;   /* slate-400 — WCAG AA on #0a0a0f bg (6.9:1) */
+
+  --color-brand:        0 255 136;   /* neon #00ff88 */
+  --color-brand-ink:    6 40 22;
+  --color-electric:     0 136 255;   /* electric blue */
+  --color-accent:     124  58 237;   /* violet */
+  --color-danger:     248  81  73;
+  --color-warn:       250 204  21;
+  --color-ok:           0 255 136;
+
+  /* ---- Radii ---- */
+  --radius-sm: 6px;
+  --radius:    10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-2xl: 28px;
+
+  /* ---- Layout ---- */
+  --container-max: 76rem;
+  --nav-h: 3.5rem;
+
+  /* ---- Motion ---- */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 180ms;
+  --dur: 260ms;
+  --dur-slow: 520ms;
+
+  color-scheme: dark;
+}
+
+/* Light-theme scaffolding — unused today, kept so future flip is a single edit. */
+[data-theme='light'] {
+  --color-bg:         250 250 252;
+  --color-surface:    255 255 255;
+  --color-surface-2:  244 244 248;
+  --color-border:     226 228 232;
+  --color-fg:         10 10 15;
+  --color-muted:      71 85 105;
+  --color-subtle:     100 116 139;
+  color-scheme: light;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 0ms;
+    --dur: 0ms;
+    --dur-slow: 0ms;
+  }
+}

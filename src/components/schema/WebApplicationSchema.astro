@@ -1,0 +1,43 @@
+---
+import JsonLd from '~/components/JsonLd.astro';
+import { site } from '~/lib/site';
+
+interface Props {
+  name: string;
+  description: string;
+  url: string;
+  applicationCategory?: string;
+  /** Feature bullets for AI/search extraction. */
+  featureList?: string[];
+}
+
+const {
+  name,
+  description,
+  url,
+  applicationCategory = 'BusinessApplication',
+  featureList,
+} = Astro.props;
+
+const absoluteUrl = url.startsWith('http') ? url : new URL(url, site.url).toString();
+
+const data: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name,
+  description,
+  url: absoluteUrl,
+  applicationCategory,
+  operatingSystem: 'Any (browser)',
+  browserRequirements: 'Modern browser with JavaScript enabled',
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'USD',
+  },
+  publisher: { '@type': 'Organization', name: site.parent },
+};
+if (featureList && featureList.length) data.featureList = featureList;
+---
+
+<JsonLd data={data} />

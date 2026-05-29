@@ -1,0 +1,53 @@
+---
+// Lightweight inline CTA insert. Drops at the END of any section to give
+// readers an immediate "do something" button without breaking flow.
+// Default: free kit CTA. `variant="buy"` switches to the paid Stack CTA.
+//
+// Use sparingly — one per section, after the section's emotional payoff.
+
+interface Props {
+  /** Headline copy. Keep ≤8 words. */
+  headline?: string;
+  /** Optional one-line sub. */
+  sub?: string;
+  /** "kit" → free kit modal · "buy" → scroll to #pricing · "both" → render both */
+  variant?: 'kit' | 'buy' | 'both';
+  /** Track this CTA's source in analytics. */
+  source: string;
+}
+
+const {
+  headline = 'Ready when you are.',
+  sub,
+  variant = 'kit',
+  source,
+} = Astro.props;
+---
+
+<div class="mt-10 md:mt-12 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 reveal">
+  <div class="flex-1 min-w-0">
+    <p class="text-fluid-base md:text-fluid-lg font-semibold tracking-tight">{headline}</p>
+    {sub && <p class="mt-1 text-fluid-sm text-muted">{sub}</p>}
+  </div>
+  <div class="flex flex-col sm:flex-row gap-2 shrink-0">
+    {(variant === 'kit' || variant === 'both') && (
+      <a
+        href="#kit-cta"
+        data-cta="kit"
+        data-cta-source={source}
+        class="btn btn-primary text-fluid-sm md:text-fluid-base px-5 py-2.5 whitespace-nowrap"
+      >
+        Get the free kit
+      </a>
+    )}
+    {(variant === 'buy' || variant === 'both') && (
+      <a
+        href="#pricing"
+        data-cta-source={source}
+        class="btn btn-secondary text-fluid-sm md:text-fluid-base px-5 py-2.5 whitespace-nowrap"
+      >
+        See $499 Stack
+      </a>
+    )}
+  </div>
+</div>
