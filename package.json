@@ -1,8 +1,15 @@
 {
   "name": "astro-portfolio-template",
   "type": "module",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": false,
+  "description": "A fork-ready Astro portfolio with a scroll-scrubbed video background, floating glass UI, 3D hover-tilt cards and a brand-logo marquee. MIT.",
+  "license": "MIT",
+  "author": "Tejas Karan Agrawal <tejaskagrawalgwl@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/floating-astronaut/astro-portfolio-template.git"
+  },
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
@@ -10,53 +17,33 @@
     "astro": "astro",
     "check": "astro check",
     "lint": "astro check",
-    "citations:check": "node --experimental-strip-types scripts/ai-citation-check.ts",
-    "citations:quick": "node --experimental-strip-types scripts/ai-citation-check.ts --quick",
-    "schemas:validate": "node --experimental-strip-types scripts/validate-schemas.ts",
-    "links:audit": "node --experimental-strip-types scripts/link-audit.ts",
-    "gsc:check": "node --experimental-strip-types scripts/gsc-check.ts",
-    "gsc:submit": "node --experimental-strip-types scripts/gsc-check.ts --submit",
-    "google:audit": "node --experimental-strip-types scripts/google-stack-audit.ts",
-    "backlinks:watch": "node --experimental-strip-types scripts/backlink-watch.ts",
-    "team:fetch": "node --experimental-strip-types scripts/fetch-team-photos.ts",
-    "og:generate": "node --experimental-strip-types scripts/generate-og-images.ts",
-    "blog:covers": "node --experimental-strip-types scripts/generate-blog-covers.ts",
-    "loser-prompts": "node --experimental-strip-types scripts/loser-prompts.ts",
-    "brand:sync": "node --experimental-strip-types scripts/sync-agents-brand-block.ts",
-    "brand:apply": "node --experimental-strip-types scripts/sync-agents-brand-block.ts --apply",
-    "pricing:watch": "node --experimental-strip-types scripts/pricing-watcher.ts",
-    "pricing:watch:no-fail": "node --experimental-strip-types scripts/pricing-watcher.ts --no-fail"
+    "test": "playwright test",
+    "test:install": "playwright install --with-deps chromium",
+    "schemas:validate": "tsx scripts/validate-schemas.ts",
+    "links:audit": "tsx scripts/link-audit.ts",
+    "test:unit": "vitest run",
+    "film:demo": "bash media-src/demo-clips.sh && bash media-src/build-film.sh media-src/clips/{1,2,3,4,5}.mp4",
+    "assets:placeholder": "node media-src/placeholder-assets.mjs"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.4",
-    "@astrojs/mdx": "^3.1.9",
-    "@astrojs/rss": "^4.0.9",
-    "@astrojs/sitemap": "3.2.1",
-    "@fontsource-variable/inter-tight": "^5.1.0",
-    "@fontsource/geist-mono": "^5.1.0",
-    "@iconify-json/tabler": "^1.2.33",
-    "@resvg/resvg-js": "^2.6.2",
-    "astro": "^4.16.18",
-    "astro-icon": "^1.1.5",
-    "intl-tel-input": "^28.0.4",
-    "lenis": "^1.1.18",
-    "motion": "^11.11.17",
-    "satori": "^0.12.1",
-    "satori-html": "^0.3.2",
-    "sharp": "^0.33.5",
-    "tailwind-merge": "^3.5.0",
-    "tailwindcss": "^3.4.14",
-    "typescript": "^5.6.3"
+    "@astrojs/check": "^0.9.9",
+    "@astrojs/sitemap": "^3.7.4",
+    "@fontsource-variable/inter-tight": "^5.3.0",
+    "@iconify-json/logos": "^1.2.15",
+    "@iconify/utils": "^3.1.7",
+    "astro": "^7.3.5",
+    "gsap": "^3.15.0",
+    "lenis": "^1.3.26"
   },
   "devDependencies": {
-    "@astrojs/tailwind": "^5.1.3",
+    "@playwright/test": "^1.63.0",
     "@types/node": "^22.9.0",
-    "googleapis": "^171.4.0",
-    "stripe": "^22.1.0"
+    "sharp": "^0.35.5",
+    "tsx": "^4.20.0",
+    "typescript": "^6.0.3",
+    "vitest": "^5.0.3"
   },
   "engines": {
-    "node": ">=20"
-  },
-  "description": "A production-grade, fork-ready Astro portfolio/personal-site starter \u2014 floating-pill nav, motion system, SEO schema, analytics-as-env, OG + contact form. MIT.",
-  "license": "MIT"
+    "node": ">=22.12.0"
+  }
 }

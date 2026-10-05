@@ -21,3 +21,6 @@ playwright/.cache/
 # Lighthouse CI
 .lighthouseci/
 output/
+
+# Generated demo clips (rebuild with npm run film:demo)
+media-src/clips/

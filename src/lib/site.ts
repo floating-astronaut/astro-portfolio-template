@@ -1,73 +1,30 @@
-// ─────────────────────────────────────────────────────────────────────────
-// Single source of truth for site identity, nav, and social links.
-// Fork this template, then edit THIS FILE first — almost everything the
-// visitor sees flows from here. Search the repo for "Your Name" to find
-// the remaining inline copy to replace.
-// ─────────────────────────────────────────────────────────────────────────
-
+// Site-wide identity. Edit these values first — the header, footer, contact
+// card, SEO tags and JSON-LD all read from here.
 export const site = {
   name: 'Your Name',
-  parent: 'Your Studio',
-  domain: 'example.com',
+  role: 'Product designer & developer',
+  // Your live domain. Also set `site` in astro.config.mjs (or PUBLIC_SITE_URL) for the sitemap.
   url: 'https://example.com',
   contactEmail: 'hello@example.com',
-  discordInvite: '',
-  tagline: 'One-line positioning statement — what you do and who for.',
-  description:
-    'Portfolio of Your Name — short paragraph describing your work, your craft, and the kind of projects you take on. This text is used for SEO meta + OG cards.',
+  tagline: 'Product designer who ships.',
+  description: 'Portfolio of Your Name: product design, front-end development and selected projects.',
+  // Shown under your name in the footer — availability, location, or anything short.
+  status: 'Open to new roles · Your City',
   ogImage: '/assets/brand/og-image.png',
-  twitter: '',
-  linkedin: '',
+  linkedin: 'https://www.linkedin.com/in/your-handle',
+  github: 'https://github.com/your-handle',
+  gitlab: 'https://gitlab.com/your-handle',
   locale: 'en-US',
 } as const;
 
-export const nav = [
-  { href: '/#proof', label: 'Work' },
-  { href: '/#experience', label: 'Experience' },
-  { href: '/#systems', label: 'Approach' },
-  { href: '/#contact', label: 'Contact' },
-] as const;
-
-export const legalNav = [
-  { href: '/#contact', label: 'Contact' },
-] as const;
-
-// Social links — delete the ones you don't use, the Footer + SocialIcons
-// components render whatever's here. Icons live in /public/icons/social/.
+// Round social buttons in the footer. Remove any you don't use; icons live in
+// public/icons/social/ and take the current text colour.
 export const socialLinks = [
-  { name: 'GitHub',   handle: 'your-handle',  href: 'https://github.com/your-handle',          icon: '/icons/social/github.svg' },
-  { name: 'LinkedIn', handle: 'your-handle',  href: 'https://www.linkedin.com/in/your-handle', icon: '/icons/social/linkedin.svg' },
-  { name: 'X',        handle: '@your-handle', href: 'https://x.com/your-handle',               icon: '/icons/social/x.svg' },
+  { name: 'LinkedIn', href: 'https://www.linkedin.com/in/your-handle', icon: '/icons/social/linkedin.svg' },
+  { name: 'Instagram', href: 'https://www.instagram.com/your-handle', icon: '/icons/social/instagram.svg' },
+  { name: 'TikTok', href: 'https://www.tiktok.com/@your-handle', icon: '/icons/social/tiktok.svg' },
+  { name: 'Facebook', href: 'https://www.facebook.com/your-handle', icon: '/icons/social/facebook.svg' },
+  { name: 'Reddit', href: 'https://www.reddit.com/user/your-handle', icon: '/icons/social/reddit.svg' },
+  { name: 'Snapchat', href: 'https://www.snapchat.com/add/your-handle', icon: '/icons/social/snapchat.svg' },
+  { name: 'WhatsApp', href: 'https://wa.me/0000000000', icon: '/icons/social/whatsapp.svg' },
 ] as const;
-
-// Optional announcement bar across the top. Set enabled: true to show.
-export const announcementBar = {
-  enabled: false,
-  message: '',
-  ctaLabel: '',
-  ctaHref: '/',
-  promoCode: null as string | null,
-} as const;
-
-// Legal entity block — used by any /legal pages and the footer fine print.
-// Fill with your real details OR leave as placeholders if you don't ship
-// legal pages. Nothing here is required for the template to build.
-export const legalEntity = {
-  name: 'Your Legal Name or Company',
-  type: 'Sole proprietorship',
-  owner: 'Your Name',
-  address: 'City, Region, Country',
-  phone: '',
-  email: 'hello@example.com',
-  jurisdiction: 'Your jurisdiction',
-  arbitrationSeat: 'Your city',
-  arbitrationRules: '',
-  dataStorageRegion: '',
-  paymentProcessor: 'N/A',
-  currency: 'USD',
-  taxIdLabel: '',
-  taxId: '',
-} as const;
-
-export type NavItem = (typeof nav)[number];
-export type SocialLink = (typeof socialLinks)[number];

@@ -1,8 +1,6 @@
 ---
-import '~/styles/global.css';
+import '~/styles/base.css';
 import { site } from '~/lib/site';
-import Nav from '~/components/Nav.astro';
-import Footer from '~/components/Footer.astro';
 import JsonLd from '~/components/JsonLd.astro';
 import Analytics from '~/components/Analytics.astro';
 
@@ -10,7 +8,6 @@ interface Props {
   title?: string;
   description?: string;
   image?: string;
-  ogSlug?: string;
   noindex?: boolean;
   pageType?: 'WebPage' | 'Article' | 'ContactPage' | 'AboutPage';
 }
@@ -19,32 +16,31 @@ const {
   title,
   description = site.description,
   image,
-  ogSlug,
   noindex = false,
   pageType = 'WebPage',
 } = Astro.props;
 
 const fullTitle = title ? `${title} - ${site.name}` : `${site.name} - ${site.tagline}`;
-const canonical = new URL(Astro.url.pathname, site.url).toString();
-const ogImage = image
-  ? new URL(image, site.url).toString()
-  : new URL(site.ogImage, site.url).toString();
+// astro.config.mjs `site` (PUBLIC_SITE_URL) wins; site.ts is the fallback.
+const base = Astro.site?.toString() ?? site.url;
+const canonical = new URL(Astro.url.pathname, base).toString();
+const ogImage = new URL(image ?? site.ogImage, base).toString();
 
 const personLd = {
   '@context': 'https://schema.org',
   '@type': 'Person',
   name: site.name,
-  url: site.url,
-  jobTitle: 'AI systems builder and founder-operator',
-  worksFor: { '@type': 'Organization', name: site.parent, url: site.url },
-  sameAs: [],  // populate from your social profiles if you want richer Person schema
+  url: base,
+  jobTitle: site.role,
+  email: `mailto:${site.contactEmail}`,
+  sameAs: [site.linkedin, site.github],
 };
 
-const siteLd = { '@context': 'https://schema.org', '@type': 'WebSite', name: site.name, url: site.url };
+const siteLd = { '@context': 'https://schema.org', '@type': 'WebSite', name: site.name, url: base };
 const pageLd = { '@context': 'https://schema.org', '@type': pageType, name: fullTitle, url: canonical, description, image: ogImage, inLanguage: site.locale };
 ---
 <!doctype html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" data-chapter="0" style="--film-progress: 0">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -73,21 +69,19 @@ const pageLd = { '@context': 'https://schema.org', '@type': pageType, name: full
     <Analytics />
     <slot name="head" />
   </head>
-  <body class="bg-bg text-fg">
-    {/* GTM noscript fallback — mirrors the head bootstrap in Analytics.astro.
-        Container ID kept in sync with PUBLIC_GTM_CONTAINER_ID (defaults to
-        set PUBLIC_GTM_CONTAINER_ID in your env to enable GTM). */}
-    {(import.meta.env.PUBLIC_GTM_CONTAINER_ID ?? '') && (
+  <body >
+    {/* GTM noscript fallback — mirrors the head bootstrap in Analytics.astro; off unless set. */}
+    {import.meta.env.PUBLIC_GTM_CONTAINER_ID && (
       <noscript>
         <iframe
-          src={`https://www.googletagmanager.com/ns.html?id=${import.meta.env.PUBLIC_GTM_CONTAINER_ID ?? ''}`}
+          src={`https://www.googletagmanager.com/ns.html?id=${import.meta.env.PUBLIC_GTM_CONTAINER_ID}`}
           height="0" width="0"
           style="display:none;visibility:hidden"
         ></iframe>
       </noscript>
     )}
-    <div id="header-stack" class="fixed top-0 inset-x-0 z-50"><Nav /></div>
-    <main id="main" tabindex="-1" class="pt-[var(--nav-h)]"><slot /></main>
-    <Footer />
+    <slot name="header" />
+    <main><slot /></main>
+    <slot name="footer" />
   </body>
 </html>

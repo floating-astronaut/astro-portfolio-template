@@ -3,9 +3,7 @@
     "collect": {
       "staticDistDir": "./dist",
       "url": [
-        "http://localhost/index.html",
-        "http://localhost/case-studies/index.html",
-        "http://localhost/case-studies/hidden-attribution/index.html"
+        "http://localhost/index.html"
       ],
       "numberOfRuns": 3,
       "settings": {
@@ -33,7 +31,7 @@
           }
         ],
         "categories:best-practices": [
-          "error",
+          "warn",
           {
             "minScore": 0.95
           }

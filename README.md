@@ -1,132 +1,272 @@
-<h1 align="center">Astro Portfolio Template</h1>
+<div align="center">
 
-<p align="center">
-  <b>A production-grade, fork-ready personal-site / portfolio starter built with Astro.</b><br/>
-  Floating-pill nav · motion system · SEO schema · analytics-as-env · OG cards · contact form. MIT.
-</p>
+# Astro Portfolio Template
 
-<p align="center">
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-black.svg" alt="MIT License"></a>
-  <a href="https://github.com/floating-astronaut/astro-portfolio-template"><img src="https://img.shields.io/badge/github-floating--astronaut-181717.svg?logo=github&logoColor=white" alt="GitHub"></a>
-  <img src="https://img.shields.io/badge/Astro-5-BC52EE?logo=astro&logoColor=white" alt="Astro">
-  <img src="https://img.shields.io/badge/Tailwind-3-38BDF8?logo=tailwindcss&logoColor=white" alt="Tailwind">
-  <img src="https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white" alt="TypeScript">
-</p>
+### A fork-ready **Astro 7** portfolio where the whole page scrubs through a video as you scroll.
 
-> Maintained by [Tejas Karan Agrawal](https://github.com/floating-astronaut). Two sites in production run on this exact stack:
-> **[tejaskaranagrawal.com](https://tejaskaranagrawal.com)** and **[nuraveda.com](https://nuraveda.com)**.
-> Fork it, edit one config file, replace the copy, ship.
+A cinematic, scroll-driven background film, floating frosted-glass header and
+footer, 3D hover-tilt cards, and a drifting brand-logo marquee — on a fast,
+static, accessible page. Edit four data files, drop in your clips, ship.
+
+[![Astro](https://img.shields.io/badge/Astro-7-BC52EE?logo=astro&logoColor=white)](https://astro.build/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6_strict-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![GSAP](https://img.shields.io/badge/GSAP-3-0AE448?logo=greensock&logoColor=black)](https://gsap.com/)
+[![Lenis](https://img.shields.io/badge/Lenis-smooth_scroll-111111)](https://lenis.darkroom.engineering/)
+[![Playwright](https://img.shields.io/badge/tested_with-Playwright-2EAD33?logo=playwright&logoColor=white)](https://playwright.dev/)
+[![Node](https://img.shields.io/badge/Node-22+-5FA04E?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](#contributing)
+
+**🔗 Live demo:** **[tejaskaranagrawal.com](https://tejaskaranagrawal.com/)** — a real portfolio running on this exact code.
+
+<img src="docs/hero.webp" alt="The template's hero: a glass header, a large name, four stat cards, over a green abstract video background" width="860" />
+
+</div>
 
 ---
 
-## Why this exists
+## Table of contents
 
-Most portfolio starters are either a bare Astro `create` skeleton or a heavy
-theme you have to fight. This sits in between: the boring-but-essential
-production layer is already wired — nav, motion, SEO/schema, analytics,
-OG metadata, a contact form — and the content is clean placeholder text you
-swap out. No brand lock-in, no business logic, no telemetry phoning home.
+- [Why this template](#why-this-template)
+- [Features](#features)
+- [How the scroll film works](#how-the-scroll-film-works)
+- [Tech stack](#tech-stack)
+- [Quick start](#quick-start)
+- [Make it yours](#make-it-yours)
+- [Your own background film](#your-own-background-film)
+- [Project structure](#project-structure)
+- [Testing](#testing)
+- [Deployment](#deployment)
+- [Contributing](#contributing)
+- [License](#license)
 
-## What's included
+---
 
-- **Astro static output** — zero JS by default; ships as a plain static dir, deploy anywhere (Cloudflare Pages, Netlify, Vercel, nginx, GitHub Pages).
-- **Floating-pill nav** — sticky, rounded, blurred, with an accessible mobile drawer (hamburger → full-screen, Escape to close, focus-safe).
-- **Motion-ready, content-first** — `.reveal` elements are visible by default and only animate when JS is present, so slow networks / blocked scripts never leave blank sections.
-- **Mobile performance guards** — section-level `overflow-x: clip`, capped blur radii on touch devices, image overflow guards. (These were battle-tested fixes for a real >30s iOS Safari freeze.)
-- **SEO + structured data** — `JsonLd` Person/WebPage schema in the base layout, plus a `components/schema/` set (Breadcrumb, FAQ, HowTo, Product, SoftwareApplication, WebApplication, Claim).
-- **Analytics as env** — GTM, GA4, Meta Pixel, TikTok Pixel, Plausible, Umami. Each reads its own `PUBLIC_*` var and is **off unless set**. No IDs are baked in.
-- **OG image + meta** — Open Graph / Twitter cards wired through the base layout; static OG image you can replace.
-- **Contact form** — progressive-enhancement form component (wire it to your endpoint / Cloudflare Pages Function / Formspree, etc.).
-- **Design tokens** — colors, radii, motion, fluid type scale in `src/styles/tokens.css`. Re-theme by editing the CSS custom properties.
+## Why this template
+
+Scroll-driven video backgrounds look incredible on award sites — and are
+painful to get right. Scrub a normal MP4 and it stutters, freezes on one
+frame, or never plays on iPhone. This template ships the parts that are
+actually hard: a film encoded for instant seeking, a playhead that glides
+instead of jumping, a separate light encode for phones, a fallback for hosts
+that don't support byte-range requests, and a page that stays fully readable
+with JavaScript off or reduced motion on.
+
+The content is plain HTML from four small data files, so recruiters, screen
+readers, ATS parsers and search engines all see every word.
+
+> This template ships neutral placeholder copy, a generated demo film and
+> placeholder images for you to replace with your own.
+
+---
+
+## Features
+
+| | |
+|---|---|
+| 🎞️ **Scroll-scrubbed film** | A fixed video behind the page; scroll position drives `currentTime`, eased so it glides |
+| 📱 **Phone-aware** | Touch devices get a 540p, 12 fps all-keyframe encode that seeks instantly; iOS playback is primed on first touch |
+| 🧊 **Floating glass UI** | Frosted header and footer pills with backdrop blur and a solid fallback where blur isn't supported |
+| 🃏 **3D hover tilt** | Cards tilt toward the pointer with GSAP `quickTo` and a light that follows the cursor — desktop only, lazy-loaded |
+| 🏷️ **Brand-logo marquee** | Two drifting rows of real logos rendered to inline SVG at build time — zero client JS |
+| 🧭 **Section-aware nav** | Header links highlight the section in view; Lenis smooth scroll on desktop |
+| ♿ **Accessible by default** | Real `<h1>`, landmarks, keyboard focus, `prefers-reduced-motion` keeps the poster and flat cards |
+| 🔎 **SEO + JSON-LD** | Canonical, Open Graph/Twitter cards, Person + WebSite schema, sitemap, `robots.txt`, `llms.txt` |
+| 📈 **Analytics as env** | GTM, GA4, Meta Pixel, TikTok, Plausible or Umami — each **off unless its env var is set** |
+| 🧪 **Tested** | 19 Vitest unit tests for the scroll maths, 13 Playwright tests, Lighthouse budgets in CI |
+
+<div align="center">
+<img src="docs/projects.webp" alt="The projects section: 2×2 square glass tiles with screenshots, status chips and links" width="860" />
+</div>
+
+---
+
+## How the scroll film works
+
+```mermaid
+flowchart LR
+    S["🖱️ Scroll<br/>(Lenis on desktop)"] --> P["progress 0 → 1<br/>through the film world"]
+    P --> E["Eased playhead<br/>110 ms half-life"]
+    E --> Q["One seek in flight<br/>next waits for 'seeked'"]
+    Q --> V["🎞️ video.currentTime"]
+    E --> C["--film-progress<br/>html[data-chapter]"]
+
+    subgraph Load["On load"]
+        direction TB
+        M{"Touch device?"} -->|yes| L["540p · 12 fps · all keyframes"]
+        M -->|no| D["1080p · keyframe every 6 frames"]
+        L --> R{"Range request → 206?"}
+        D --> R
+        R -->|yes| ST["Stream directly"]
+        R -->|no| B["Download once as a blob URL"]
+    end
+    Load --> V
+```
+
+- **Seekable encodes.** Ordinary MP4s have a keyframe every few seconds, so
+  each seek decodes dozens of frames. The build script encodes with a keyframe
+  every 6 frames (desktop) or every frame (touch).
+- **Glide, don't jump.** The playhead eases toward the scroll target and only
+  one seek is in flight at a time, so fast scrolling never queues a backlog.
+- **Range fallback.** Seeking needs HTTP byte ranges. Some hosts (e.g. a
+  Cloudflare `*.pages.dev` preview) answer `200` instead of `206`; the player
+  detects this with a 2-byte probe and plays from a blob URL instead.
+- **Chapters.** `film-chapters.json` records where each clip starts, published
+  as `html[data-chapter]` so CSS can react to the part of the film on screen.
+
+The pure maths lives in [`src/scripts/scroll-film-core.ts`](src/scripts/scroll-film-core.ts)
+and is unit-tested; the DOM wiring is in [`src/scripts/scroll-film.ts`](src/scripts/scroll-film.ts).
+
+---
+
+## Tech stack
+
+| Layer | Technology |
+|---|---|
+| Framework | Astro 7 (static output) · TypeScript 6 strict |
+| Motion | GSAP 3 (hover tilt) · Lenis (smooth scroll) · native `<video>` scrubbing |
+| Styling | Plain CSS with custom-property tokens · Inter Tight Variable (self-hosted) |
+| Icons | `@iconify-json/logos` rendered at build time · SVG social icons as CSS masks |
+| Media | ffmpeg (film encodes) · sharp (images) |
+| Testing | Vitest · Playwright · Lighthouse CI |
+
+---
 
 ## Quick start
 
-**Requirements:** Node 18+, pnpm (or npm/yarn).
+**Prerequisites:** Node 22.12+ and npm. ffmpeg only if you rebuild the film.
 
 ```bash
-git clone https://github.com/floating-astronaut/astro-portfolio-template.git
-cd astro-portfolio-template
-pnpm install
-cp .env.example .env      # optional — site builds with everything blank
-pnpm dev                  # http://localhost:4321
+# 1. Use this template on GitHub, or clone it
+git clone https://github.com/floating-astronaut/astro-portfolio-template.git my-portfolio
+cd my-portfolio
+
+# 2. Install and run
+npm install
+npm run dev                    # http://localhost:4321
 ```
 
-## Make it yours (in order)
+> 💡 The demo film is already in `public/media/film/`, so the site works
+> immediately — no ffmpeg needed until you swap in your own clips.
 
-1. **`src/lib/site.ts`** — your name, tagline, description, domain, contact email, nav items, social links. This is the single source of truth; most of the page flows from here.
-2. **`src/pages/index.astro`** — the portfolio content (hero, stats, experience, skills, selected work, contact). All placeholder — replace the arrays + copy.
-3. **`src/styles/tokens.css`** — brand color is `--color-brand`; swap it (and `--color-electric` for the accent) to re-theme everything.
-4. **`public/assets/brand/`** — replace the favicon set, `mark-128.png` (the nav/footer logo), and `og-image.png` with your own.
-5. **`.env`** — set the analytics IDs you actually use (all optional).
-6. **`src/components/ContactForm.astro`** — point the form at your submission endpoint.
-
-Search the repo for `Your Name` and `example.com` to find every remaining string to replace.
-
-## Layout
-
-```
-src/
-  pages/
-    index.astro          Single-page portfolio (placeholder content)
-  layouts/
-    Base.astro           HTML shell: meta, OG, JSON-LD, Nav, Footer, Analytics
-  components/
-    Nav.astro            Floating-pill nav + mobile drawer
-    Footer.astro         Footer with nav + social + contact
-    Analytics.astro      Env-gated GTM / GA4 / Meta / TikTok / Plausible / Umami
-    JsonLd.astro         Structured-data emitter
-    SocialIcons.astro    Renders socialLinks from site.ts
-    ContactForm.astro    Progressive-enhancement contact form
-    StackLogoMarquee.astro, Mascot, Icon, InlineCta, StatCallout, ImageSlot, AnnouncementBar
-    schema/              BreadcrumbSchema, FAQSchema, HowToSchema, ProductSchema, ...
-  content/
-    config.ts            Blog collection schema (example post included)
-    blog/hello-world.mdx Example post — wire a /blog route to render it
-  lib/site.ts            ← edit this first
-  styles/                tokens.css (design tokens) + global.css (base + utilities)
-public/
-  assets/brand/          favicons, logo mark, OG image  ← replace with yours
-```
-
-## Content collections
-
-`src/content/config.ts` defines a `blog` collection with a typed schema and
-ships one example post. To render posts, add routes:
-
-```astro
 ---
-// src/pages/blog/index.astro
-import { getCollection } from 'astro:content';
-const posts = (await getCollection('blog')).filter(p => !p.data.draft);
+
+## Make it yours
+
+| To change… | Edit |
+|---|---|
+| Name, role, email, tagline, social links | [`src/lib/site.ts`](src/lib/site.ts) |
+| Hero stats, experience, education, certifications | [`src/data/profile.ts`](src/data/profile.ts) |
+| Project tiles (first four) and featured bar (fifth) | [`src/data/projects.ts`](src/data/projects.ts) + screenshots in `public/projects/` |
+| The two groups of six capability cards | [`src/data/capabilities.ts`](src/data/capabilities.ts) |
+| Section titles and order | [`src/pages/index.astro`](src/pages/index.astro) |
+| Marquee logos | `rows` in [`src/components/LogoMarquee.astro`](src/components/LogoMarquee.astro) (any [`logos:` icon](https://icon-sets.iconify.design/logos/)) |
+| Accent colour, glass, spacing | tokens at the top of [`src/styles/base.css`](src/styles/base.css) |
+| How dark the film sits behind text | `--film-dim` in [`src/components/ScrollFilm.astro`](src/components/ScrollFilm.astro) |
+| Avatar, favicons, OG image | `public/assets/brand/` (same file names) |
+| Domain | `site` in [`astro.config.mjs`](astro.config.mjs) or `PUBLIC_SITE_URL`, plus `url` in `site.ts` and `robots.txt` |
+| Analytics | `.env` — copy [`.env.example`](.env.example); every tracker is optional |
+
 ---
-{posts.map(p => <a href={`/blog/${p.slug}`}>{p.data.title}</a>)}
+
+## Your own background film
+
+Any 2+ clips work — AI-generated video (Veo, Sora, Runway…), stock footage or
+screen recordings. 1920×1080 at 24 fps is ideal; abstract, slow-moving footage
+reads best behind text.
+
+```bash
+# Joins your clips with 0.6 s crossfades and writes everything the site needs
+bash media-src/build-film.sh clip1.mp4 clip2.mp4 clip3.mp4 clip4.mp4 clip5.mp4
 ```
 
-```astro
----
-// src/pages/blog/[slug].astro
-import { getCollection } from 'astro:content';
-export async function getStaticPaths() {
-  return (await getCollection('blog')).map(p => ({ params: { slug: p.slug }, props: { p } }));
-}
-const { p } = Astro.props;
-const { Content } = await p.render();
----
-<article><Content /></article>
+This writes `public/media/film/` — the desktop and touch encodes, a poster
+frame and the chapter map. The desktop encode steps its quality down until it
+fits under Cloudflare Pages' 25 MiB file limit.
+
+To regenerate the bundled demo film (ffmpeg only, no downloads):
+
+```bash
+npm run film:demo
 ```
 
-## Deploy
+---
 
-`pnpm build` emits a static `dist/`. Point any host at it.
+## Project structure
 
-**Cloudflare Pages:** build command `pnpm build`, output dir `dist`, set your
-`PUBLIC_*` env vars in the project settings. Both reference sites
-(tejaskaranagrawal.com, nuraveda.com) are hosted exactly this way.
+```
+.
+├── src/
+│   ├── components/
+│   │   ├── ScrollFilm.astro       # fixed video + the "film world" that wraps the page
+│   │   ├── FloatingHeader.astro   # glass pill nav, section highlighting
+│   │   ├── FloatingFooter.astro   # glass footer: pages, projects, socials
+│   │   ├── LogoMarquee.astro      # build-time SVG logo rows
+│   │   └── sections/              # Hero, Capabilities, Projects, Experience, Contact
+│   ├── data/                      # profile.ts · projects.ts · capabilities.ts
+│   ├── lib/site.ts                # name, links, socials — edit first
+│   ├── scripts/                   # scroll-film(-core), smooth-scroll, tilt
+│   ├── styles/base.css            # tokens + glass + reveal
+│   └── layouts/Base.astro         # head, SEO, JSON-LD, analytics
+├── public/
+│   ├── media/film/                # film encodes, poster, chapter map
+│   ├── projects/                  # project screenshots
+│   └── assets/brand/              # avatar, favicons, OG image
+├── media-src/                     # build-film.sh · demo-clips.sh · placeholder-assets.mjs
+├── tests/                         # unit/ (Vitest) · e2e/ (Playwright)
+└── scripts/                       # JSON-LD validator · internal-link audit
+```
+
+---
+
+## Testing
+
+```bash
+npm run test:unit                  # Vitest: scroll maths, easing, chapters, range fallback
+npm run test:install               # once: Playwright's Chromium
+npm test                           # Playwright: film scrubbing, touch encode, reduced motion,
+                                   # header/footer, tilt, sections with JS off
+npm run check                      # astro check (types)
+```
+
+The e2e tests read the same data files as the page, so they keep passing as
+you replace the placeholder content. CI runs all of it plus a Lighthouse
+budget (performance ≥ 0.85, accessibility ≥ 0.95) on every PR.
+
+---
+
+## Deployment
+
+It builds to a plain static folder (`dist/`), so it deploys anywhere.
+
+- **Cloudflare Pages** — build command `npm run build`, output `dist`, and set
+  `PUBLIC_SITE_URL`. `public/_headers` already sets security headers and
+  long-lived caching for assets.
+- **Netlify / Vercel / GitHub Pages / nginx** — same build; serve `dist/`.
+
+> ⚠️ Scrubbing needs the host to answer HTTP range requests with `206`. Most
+> do; where one doesn't, the player falls back to downloading the film once,
+> which still works but costs a slower first load.
+
+---
+
+## Contributing
+
+Issues and PRs are welcome. Please keep `npm run check`, `npm run test:unit`
+and `npm test` green. See [CONTRIBUTING.md](./CONTRIBUTING.md) for the full
+guide and [SECURITY.md](./SECURITY.md) to report a vulnerability.
+
+---
 
 ## License
 
-[MIT](LICENSE) — fork it, ship it, sell it. Attribution appreciated, not required.
+[MIT](./LICENSE) © Tejas Karan Agrawal. Use it, fork it, ship your portfolio.
 
 ---
 
-<p align="center"><sub>Maintained by <a href="https://github.com/floating-astronaut">Tejas Karan Agrawal</a>. Built with Astro.</sub></p>
+<div align="center">
+
+*Built from a real, live portfolio and opened up as a starting point.*
+**If it saved you time, a ⭐ is appreciated.**
+
+</div>

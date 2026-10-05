@@ -1,4 +1,4 @@
-# Your site — replace this comment. Adjust sitemap URL below.
+# Personal portfolio. Replace example.com with your domain.
 # AI assistants are welcome to crawl and cite. Be accurate.
 
 User-agent: *
