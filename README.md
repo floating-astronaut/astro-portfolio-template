@@ -13,7 +13,7 @@
   <img src="https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white" alt="TypeScript">
 </p>
 
-> Maintained by [Nuraveda Lab](https://nuraveda.com). Two sites in production run on this exact stack:
+> Maintained by [Tejas Karan Agrawal](https://github.com/floating-astronaut). Two sites in production run on this exact stack:
 > **[tejaskaranagrawal.com](https://tejaskaranagrawal.com)** and **[nuraveda.com](https://nuraveda.com)**.
 > Fork it, edit one config file, replace the copy, ship.
 
@@ -129,4 +129,4 @@ const { Content } = await p.render();
 
 ---
 
-<p align="center"><sub>Maintained by <a href="https://nuraveda.com">Nuraveda Lab</a>. Built with Astro.</sub></p>
+<p align="center"><sub>Maintained by <a href="https://github.com/floating-astronaut">Tejas Karan Agrawal</a>. Built with Astro.</sub></p>
