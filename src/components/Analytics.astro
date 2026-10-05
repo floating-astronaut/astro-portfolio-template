@@ -33,7 +33,7 @@ const tiktokPixelId = import.meta.env.PUBLIC_TIKTOK_PIXEL_ID ?? '';
 ---
 
 {/* ── Google Tag Manager (head bootstrap) ───────────────────────────────
-    Same container ID across all Glitch sites; the GTM workspace decides
+    One container per site; the GTM workspace decides
     which downstream tags fire on which subdomain. The body-side <noscript>
     iframe lives in Base.astro right after the opening <body> tag. */}
 {gtmId && (

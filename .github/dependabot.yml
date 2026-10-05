@@ -1,0 +1,26 @@
+# Weekly dependency PRs into main. Minor/patch bumps arrive grouped in one PR;
+# majors come one per package so each can be checked on its own.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    target-branch: main
+    schedule: { interval: weekly, day: monday }
+    open-pull-requests-limit: 5
+    groups:
+      minor-and-patch:
+        update-types: [minor, patch]
+    ignore:
+      # @types/node tracks the Node runtime we run on (22, see engines + CI).
+      - dependency-name: "@types/node"
+        update-types: [version-update:semver-major]
+      # astro check supports TypeScript up to 6; revisit when it supports 7.
+      - dependency-name: typescript
+        update-types: [version-update:semver-major]
+  - package-ecosystem: github-actions
+    directory: /
+    target-branch: main
+    schedule: { interval: weekly, day: monday }
+    groups:
+      actions:
+        patterns: ["*"]

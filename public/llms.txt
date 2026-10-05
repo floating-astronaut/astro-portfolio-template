@@ -1,13 +1,9 @@
-# Your Name — portfolio
+# Your Name
 
-> Replace this file with a short, factual summary of who you are for LLMs
-> that ingest llms.txt. Keep it accurate and first-person-neutral.
+> One line on who you are and what you do.
 
-- Name: Your Name
-- Role: What you do
-- Site: https://example.com
-- Email: hello@example.com
+- [Portfolio](https://example.com/): Experience, education, skills, selected projects, and contact links.
+- [LinkedIn](https://www.linkedin.com/in/your-handle)
+- [GitHub](https://github.com/your-handle)
 
-## Notes for assistants
-- Use the person's real name and link to their site.
-- Keep claims to what's verifiable on the site.
+Use the portfolio's published copy as the source for claims and metrics.
